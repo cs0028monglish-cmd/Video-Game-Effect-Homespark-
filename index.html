@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#071526" />
+    <meta name="description" content="HomeSpark — a joyful game-based English learning adventure." />
+    <title>HomeSpark Learning Adventure</title>
+    <!-- Polyfill for Import Maps support on older mobile browsers -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cinzel:wght@700;900&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script type="importmap">
+{
+  "imports": {
+    "react/jsx-runtime": "https://aistudiocdn.com/react@^19.2.1/jsx-runtime",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.1/client",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/"
+  }
+}
+</script>
+<style>
+    body {
+        font-family: 'Outfit', sans-serif;
+        background-color: #03121b;
+        background-image: radial-gradient(circle at 50% 30%, #10425e 0%, #072537 60%, #03121b 100%);
+        background-attachment: fixed;
+        margin: 0;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* Flip Card Utilities */
+    .perspective-1000 {
+        perspective: 1000px;
+        -webkit-perspective: 1000px;
+    }
+    .transform-style-3d {
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+    }
+    .backface-hidden {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+        transform: rotateY(180deg);
+        -webkit-transform: rotateY(180deg);
+    }
+    .card-back {
+        transform: rotateY(180deg) translateZ(1px);
+        -webkit-transform: rotateY(180deg) translateZ(1px);
+    }
+    .card-front {
+        transform: rotateY(0deg) translateZ(1px);
+        -webkit-transform: rotateY(0deg) translateZ(1px);
+    }
+
+    /* Print Styling */
+    @media print {
+        @page {
+            margin: 0;
+            size: auto;
+        }
+        body {
+            background: white;
+            /* Dark Blue Page Border */
+            border: 20px solid #1e3a8a !important; 
+            min-height: 100vh;
+            padding: 20px !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .no-print {
+            display: none !important;
+        }
+        .print-only {
+            display: block !important;
+        }
+        .print-full-width {
+            width: 100% !important;
+            max-width: none !important;
+            grid-column: span 12 !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        
+        /* Pastel Colors for Question Boxes */
+        .pastel-box:nth-child(5n+1) { background-color: #ffe4e6 !important; border-color: #fda4af !important; } /* Rose */
+        .pastel-box:nth-child(5n+2) { background-color: #dbeafe !important; border-color: #93c5fd !important; } /* Blue */
+        .pastel-box:nth-child(5n+3) { background-color: #d1fae5 !important; border-color: #6ee7b7 !important; } /* Emerald */
+        .pastel-box:nth-child(5n+4) { background-color: #fef3c7 !important; border-color: #fcd34d !important; } /* Amber */
+        .pastel-box:nth-child(5n+5) { background-color: #f3e8ff !important; border-color: #d8b4fe !important; } /* Purple */
+    }
+    
+    .print-only {
+        display: none;
+    }
+
+    /* Custom Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slideUp {
+        animation: slideUp 0.6s ease-out forwards;
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slideInRight {
+        animation: slideInRight 0.5s ease-out forwards;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+        20%, 40%, 60%, 80% { transform: translateX(4px); }
+    }
+    .animate-shake {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    /* === CLASS LENS SPECIAL STYLES === */
+    
+    .class-lens-bg {
+        background: radial-gradient(circle at 50% 30%, #10425e 0%, #072537 60%, #03121b 100%);
+    }
+
+    .gold-metallic-text {
+        font-family: 'Cinzel', serif;
+        text-transform: uppercase;
+        /* Metallic Sunset Orange Gradient */
+        background: linear-gradient(
+            to right,
+            #f58220 0%,
+            #ffcea8 25%,
+            #d16611 50%,
+            #ffe5d1 75%,
+            #a14c07 100%
+        );
+        background-size: 200% auto;
+        
+        /* Clip to text */
+        -webkit-background-clip: text;
+        background-clip: text;
+        
+        /* Fallback color */
+        color: transparent;
+        
+        /* Animation */
+        animation: shine 4s linear infinite;
+        
+        /* Protruded Effect using Drop Shadow Filter which works on transparent text */
+        filter: 
+            drop-shadow(0px 2px 0px #a14c07)
+            drop-shadow(0px 4px 0px #6d3002)
+            drop-shadow(0px 6px 4px rgba(0,0,0,0.5));
+    }
+
+    @keyframes shine {
+        to {
+            background-position: 200% center;
+        }
+    }
+
+    /* Floating Particles for background */
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(245, 130, 32, 0.3);
+        box-shadow: 0 0 10px rgba(245, 130, 32, 0.2);
+        animation: floatParticle 10s infinite linear;
+    }
+    
+    @keyframes floatParticle {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        20% { opacity: 0.5; }
+        80% { opacity: 0.5; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+</style>
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
